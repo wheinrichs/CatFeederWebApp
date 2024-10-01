@@ -13,7 +13,7 @@ export const checkLoginState = async () => {
       console.log("checkLogin return null");
       return null;
     } else {
-      console.log("checkLogin return user");
+      console.log("checkLogin return user: ", user);
 
       return user;
     }
@@ -62,5 +62,37 @@ export const handleLogin = async () => {
     window.location.assign(url);
   } catch (err) {
     console.error(err);
+  }
+};
+
+export const getAllUsernames = async () => {
+  try {
+    // Get Usernames from server
+    const response = await axios.get(`${serverUrl}/api/getAllUsernames`);
+    console.log(response)
+    return response;
+  } catch (err) {
+    console.error(err);
+    return err;
+  }
+};
+
+export const createNewUser = async (newUser: any) => {
+  try {
+    const response = await axios.post(`${serverUrl}/api/customUsers`, newUser);
+    return response;
+  } catch (err) {
+    console.error(err);
+    return err;
+  }
+};
+
+export const attemptLocalLogin = async (user: any) => {
+  try {
+    const response = await axios.post(`${serverUrl}/api/login`, user);
+    return response;
+  } catch (err) {
+    console.error(err);
+    return err;
   }
 };

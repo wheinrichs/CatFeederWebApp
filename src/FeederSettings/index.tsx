@@ -11,12 +11,15 @@ export default function FeederSettings() {
   const [schedule, setSchedule] = useState([] as any);
   const navigate = useNavigate();
   const [scheduleToDelete, setScheduleToDelete] = useState<string | null>(null);
+  const [portion, setPortion] = useState<any>();
 
   const { currentUser } = useSelector((state: any) => state.accountReducer);
 
   const fetchUserPreferences = async () => {
-    const fetchedSchedule = await client.getUserPreferences(currentUser.sub);
+    const fetchedSchedule = await client.getUserPreferences(currentUser._id);
+    console.log("Fetched schedule is: ", fetchedSchedule)
     setTimes(fetchedSchedule.schedule as any);
+    setPortion(fetchedSchedule.portion);
   };
 
   useEffect(() => {
@@ -155,29 +158,33 @@ export default function FeederSettings() {
   const postScheduleChanges = async () => {
     const toWrite = deconstructScheduleForServer();
     console.log("written ", toWrite);
-    const fetchedSchedule = await client.setUserPreferences(
-      currentUser.sub,
-      toWrite
+    const fetchedSchedule = await client.setPortionAndSchedule(
+      currentUser._id,
+      toWrite,
+      portion
     );
     console.log(fetchedSchedule);
-    navigate("/TempNav")
+    navigate("/TempNav");
   };
 
   const deleteTime = (dayId: any, index: any) => {
-    setSchedule(schedule.map((day: any) => {
-      if (day.id === dayId) {
-        const updatedTimes = day.times.filter((_: any, i: any) => i !== index);
-        return {
-          ...day,
-          times: updatedTimes,
-        };
-      }
-      return day;
-    }));
+    setSchedule(
+      schedule.map((day: any) => {
+        if (day.id === dayId) {
+          const updatedTimes = day.times.filter(
+            (_: any, i: any) => i !== index
+          );
+          return {
+            ...day,
+            times: updatedTimes,
+          };
+        }
+        return day;
+      })
+    );
   };
 
   console.log("schedule is: ", schedule);
-
 
   return (
     <div>
@@ -188,6 +195,27 @@ export default function FeederSettings() {
       <div className="container-fluid vh-100 d-flex justify-content-center position-relative">
         <div className="p-2 text-center">
           <h1 className="mb-3">Feeder Settings</h1>
+          <div className="container border border-2 border-dark my-5 p-4 rounded-4">
+            <div className="row align-items-center">
+              <label htmlFor="portionBox" className="col-auto">
+                Portion:
+              </label>
+
+              <div className="col">
+                <input
+                  id="portionBox"
+                  className="form-control"
+                  type="number"
+                  defaultValue={portion}
+                  onChange={(e) => setPortion(e.target.value)}
+                />
+              </div>
+
+              <label htmlFor="portionBox" className="col-auto">
+                1/8 Cups At Each Time
+              </label>
+            </div>
+          </div>
           {schedule.map((day: any) => (
             <div className="border border-2 border-dark m-2 p-4 rounded-4">
               <div
@@ -324,7 +352,10 @@ export default function FeederSettings() {
                       type="time"
                       value={time}
                     />
-                    <button className="btn btn-danger ms-3" onClick={() => deleteTime(day.id, index)}>
+                    <button
+                      className="btn btn-danger ms-3"
+                      onClick={() => deleteTime(day.id, index)}
+                    >
                       <MdDelete className="fs-4" />
                     </button>
                   </div>
@@ -354,7 +385,12 @@ export default function FeederSettings() {
             </button>
           </div>
           <div className="mt-4">
-            <button className="btn btn-danger mb-4 me-2" onClick={() => navigate("/TempNav")}>Cancel</button>
+            <button
+              className="btn btn-danger mb-4 me-2"
+              onClick={() => navigate("/TempNav")}
+            >
+              Cancel
+            </button>
             <button
               className="btn btn-success mb-4"
               onClick={postScheduleChanges}
@@ -365,18 +401,36 @@ export default function FeederSettings() {
         </div>
       </div>
 
-      <div className="modal fade" id="confirmationModal" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+      <div
+        className="modal fade"
+        id="confirmationModal"
+        aria-labelledby="confirmationModalLabel"
+        aria-hidden="true"
+      >
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title" id="confirmationModalLabel">Confirm Delete</h5>
-              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <h5 className="modal-title" id="confirmationModalLabel">
+                Confirm Delete
+              </h5>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
             </div>
             <div className="modal-body">
               Are you sure you want to delete this schedule?
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancel
+              </button>
               <button
                 type="button"
                 className="btn btn-danger"

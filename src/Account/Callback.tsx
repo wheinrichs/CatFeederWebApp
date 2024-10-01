@@ -23,9 +23,10 @@ export default function Callback() {
           );
           console.log("response: ", res);
           const {
-            data: { loggedIn: logged_in, user },
+            data: { loggedIn: logged_in, user, accessToken },
           } = res;
-          console.log("callback user is: ", user)
+          localStorage.setItem('token', accessToken);
+          console.log("Callback user is: ", user)
           dispatch(setCurrentUser(user));
           navigate("/");
         } catch (err) {

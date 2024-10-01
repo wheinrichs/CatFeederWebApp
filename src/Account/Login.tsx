@@ -2,11 +2,20 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import * as client from "./client";
 import GoogleButton from "react-google-button";
 import { FaGoogle } from "react-icons/fa";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentUser } from "./reducer";
 
 
 export default function Login() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [username, setUsername] = useState<String>();
+  const [password, setPassword] = useState<String>();
+  const [loginFailed, setLoginFailed] = useState<Boolean>(false);
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+
   const handleGoogleLogin = async () => {
     await client.handleLogin();
   };
@@ -19,30 +28,67 @@ export default function Login() {
     }
   }
 
+  const attemptLogin = async () => {
+    const user = { username: username, password: password };
+    try {
+        const response = await client.attemptLocalLogin(user) as any;
+        if (response.status === 200) {
+            console.log("Login successful");
+            console.log("response is: ", response)
+            const {
+              data: {  user, accessToken },
+            } = response;
+            localStorage.setItem('token', accessToken);
+            dispatch(setCurrentUser(user));
+            navigate("/");
+        } else if (response.response.status === 400) {
+            console.error("User doesn't exist");
+            setLoginFailed(true)
+
+        } else if (response.response.status === 401) {
+            console.error("Invalid password");
+            setLoginFailed(true)
+        } else {
+            console.error("Unexpected response:", response);
+            setLoginFailed(true)
+        }
+    } catch (error) {
+        console.error("An error occurred during login:", error);
+    }
+};
+
   useEffect(() => {
     checkLoggedIn(); 
   }, [])
 
+  useEffect(() => {}, [loginFailed])
+
   return (
     <div className="container-fluid vh-100 d-flex justify-content-center align-items-center bg-secondary bg-opacity-50">
-      <div className="border border-2 border-secondary rounded p-2 text-center">
+      <div className="border border-2 border-secondary rounded p-2 text-center" style={{ width: "600px", overflow: "auto" }}>
         <h1>Login</h1>
         <h4>
-          We're thrilled to have you here, please login to check on your furry
-          friend!
+          Please login to check on your furry friend!
         </h4>
         <input
           placeholder="username"
           className="form-control"
+          onChange={(e) => setUsername(e.target.value)}
           style={{ margin: "10px auto" }}
         ></input>
         <input
           placeholder="password"
           type="password"
           className="form-control"
+          onChange={(e) => setPassword(e.target.value)}
           style={{ margin: "10px auto" }}
         ></input>
-        <button className="btn btn-primary mt-1 mb-1"> Submit</button> <br />
+            {loginFailed && (
+            <div className="alert alert-danger">
+              Wrong Username or Password
+            </div>
+          )}
+        <button className="btn btn-primary mt-1 mb-1" onClick={attemptLogin}> Submit</button> <br />
         <div className="d-flex align-items-center my-2 mx-3">
           <hr className="flex-grow-1" />
           <span className="mx-2">
@@ -55,8 +101,8 @@ export default function Login() {
             Sign in with Google
           </button>
         <br />
-        Don't have an account? <Link to="/">Sign up</Link> <br />
-        Viewing this as part of a portfolio? <Link to="/">Click here</Link>
+        Don't have an account? <Link to="/SignUp">Sign up</Link> <br />
+        Viewing this as part of my portfolio? <Link to="/">Click here</Link>
       </div>
     </div>
   );

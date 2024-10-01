@@ -1,13 +1,17 @@
+import React from 'react';
+
 export default function CameraFeed() {
-    const videoUrl = 'http://54.174.122.173:8080/'
+    const videoUrl = 'https://stream.jarvisfeeders1234.win/'; // Your proxy server URL
+    const token = localStorage.getItem("token");
+
     return (
         <div>
-        <h1>Video Feed</h1>
-        <img
-          src={videoUrl}
-          alt="Video Feed"
-          style={{ width: '100%', height: 'auto' }}
-        />
-      </div>
-    )
+            <h1>Video Feed</h1>
+            <img
+                src={`${videoUrl}?token=${token}`} // Append the token to the URL as a query parameter
+                alt="Video Feed"
+                style={{ width: '100%', height: 'auto' }}
+            />
+        </div>
+    );
 }

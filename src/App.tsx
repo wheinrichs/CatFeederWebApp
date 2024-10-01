@@ -18,6 +18,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import CameraFeed from "./CameraFeed"
 import Session from "./Session";
 import FeederSettings from "./FeederSettings";
+import SignUp from "./Account/SignUp";
 
 function App() {
   return (
@@ -28,6 +29,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Navigate to="TempNav" />} />
             <Route path="/Login" element={<Login />} />
+            <Route path="/SignUp" element={<SignUp />} />
+
             <Route
               path="/TempNav"
               element={

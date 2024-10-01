@@ -12,6 +12,7 @@ export default function TempNav() {
     const [posts, setPosts] = useState([] as any)
 
     console.log("User is: ", currentUser)
+    
 
     const evalCurrentUser = async () => {
       const FetchUser = await client.checkLoginState();
