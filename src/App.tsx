@@ -55,7 +55,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="/auth/callback" element={<Callback />} />
+            <Route path="/auth/callback*" element={<Callback />} />
           </Routes>
         </BrowserRouter>
       </Session>
