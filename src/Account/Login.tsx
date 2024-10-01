@@ -38,6 +38,7 @@ export default function Login() {
             const {
               data: {  user, accessToken },
             } = response;
+            console.log("Token received in front end in attempt login is: ", accessToken)
             localStorage.setItem('token', accessToken);
             dispatch(setCurrentUser(user));
             navigate("/");

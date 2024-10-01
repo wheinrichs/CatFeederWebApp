@@ -5,6 +5,7 @@ const serverUrl = process.env.REACT_APP_SERVER_URL;
 console.log("Server URL:", serverUrl);
 
 export const checkLoginState = async () => {
+  console.log("IN CHECK LOGIN STATE FOR NOW")
   try {
     const {
       data: { loggedIn: logged_in, user },
