@@ -10,7 +10,7 @@ export default function CameraFeed() {
             <img
                 src={`${videoUrl}?token=${token}`} // Append the token to the URL as a query parameter
                 alt="Video Feed"
-                style={{ width: '100%', height: 'auto' }}
+                style={{ width: '1000px', height: 'auto' }}
             />
         </div>
     );
