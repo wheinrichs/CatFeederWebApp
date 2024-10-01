@@ -32,6 +32,7 @@ export default function TempNav() {
         try {
             await client.handleLogout();
             dispatch(setCurrentUser(null));
+            localStorage.removeItem('token');
             console.log("successful logout")
             navigate("/Login")
         }
