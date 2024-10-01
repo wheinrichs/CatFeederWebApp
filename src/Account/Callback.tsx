@@ -12,6 +12,7 @@ export default function Callback() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
+    console.log("LOGGING FROM CALLBACK");
     (async () => {
       if (currentUser === null) {
         try {
