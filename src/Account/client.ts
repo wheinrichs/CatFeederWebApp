@@ -7,9 +7,14 @@ console.log("Server URL:", serverUrl);
 export const checkLoginState = async () => {
   console.log("IN CHECK LOGIN STATE FOR NOW")
   try {
+    const token = localStorage.getItem('token');
     const {
       data: { loggedIn: logged_in, user },
-    } = await axios.get(`${serverUrl}/auth/logged_in`);
+    } = await axios.get(`${serverUrl}/auth/logged_in`, {
+      headers: {
+        'authorization': `Bearer ${token}`,
+      },
+    });
     if (logged_in === false) {
       console.log("checkLogin return null");
       return null;
