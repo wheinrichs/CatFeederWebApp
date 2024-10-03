@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentUser } from "./reducer";
 
-
 export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -21,75 +20,84 @@ export default function Login() {
   };
 
   const checkLoggedIn = async () => {
-    const loginState = await client.checkLoginState()
-    if(loginState !== false && loginState !== null) {
-      console.log("trying to reroute")
+    const loginState = await client.checkLoginState();
+    if (loginState !== false && loginState !== null) {
+      console.log("trying to reroute");
       navigate("/TempNav");
     }
-  }
+  };
 
   const attemptLogin = async () => {
     const user = { username: username, password: password };
     try {
-        const response = await client.attemptLocalLogin(user) as any;
-        if (response.status === 200) {
-            console.log("Login successful");
-            console.log("response is: ", response)
-            const {
-              data: {  user, accessToken },
-            } = response;
-            console.log("Token received in front end in attempt login is: ", accessToken)
-            localStorage.setItem('token', accessToken);
-            dispatch(setCurrentUser(user));
-            navigate("/");
-        } else if (response.response.status === 400) {
-            console.error("User doesn't exist");
-            setLoginFailed(true)
-
-        } else if (response.response.status === 401) {
-            console.error("Invalid password");
-            setLoginFailed(true)
-        } else {
-            console.error("Unexpected response:", response);
-            setLoginFailed(true)
-        }
+      const response = (await client.attemptLocalLogin(user)) as any;
+      if (response.status === 200) {
+        console.log("Login successful");
+        console.log("response is: ", response);
+        const {
+          data: { user, accessToken },
+        } = response;
+        console.log(
+          "Token received in front end in attempt login is: ",
+          accessToken
+        );
+        localStorage.setItem("token", accessToken);
+        dispatch(setCurrentUser(user));
+        navigate("/");
+      } else if (response.response.status === 400) {
+        console.error("User doesn't exist");
+        setLoginFailed(true);
+      } else if (response.response.status === 401) {
+        console.error("Invalid password");
+        setLoginFailed(true);
+      } else {
+        console.error("Unexpected response:", response);
+        setLoginFailed(true);
+      }
     } catch (error) {
-        console.error("An error occurred during login:", error);
+      console.error("An error occurred during login:", error);
     }
-};
+  };
 
   useEffect(() => {
-    checkLoggedIn(); 
-  }, [])
+    checkLoggedIn();
+  }, []);
 
-  useEffect(() => {}, [loginFailed])
+  useEffect(() => {}, [loginFailed]);
 
   return (
-    <div className="container-fluid vh-100 d-flex justify-content-center align-items-center bg-secondary bg-opacity-50">
-      <div className="border border-2 border-secondary rounded p-2 text-center" style={{ width: "600px", overflow: "auto" }}>
-        <h1>Login</h1>
-        <h4>
-          Please login to check on your furry friend!
-        </h4>
-        <input
-          placeholder="username"
-          className="form-control"
-          onChange={(e) => setUsername(e.target.value)}
-          style={{ margin: "10px auto" }}
-        ></input>
-        <input
-          placeholder="password"
-          type="password"
-          className="form-control"
-          onChange={(e) => setPassword(e.target.value)}
-          style={{ margin: "10px auto" }}
-        ></input>
-            {loginFailed && (
-            <div className="alert alert-danger">
-              Wrong Username or Password
-            </div>
-          )}
-        <button className="btn btn-primary mt-1 mb-1" onClick={attemptLogin}> Submit</button> <br />
+    <div className="container-fluid vh-100 d-flex justify-content-center align-items-center bg-opacity-50">
+      <div
+        className=" rounded p-2 text-center"
+        style={{ width: "600px", overflow: "auto" }}
+      >
+        <img src="/PetFeederLogo.png" height="150" />
+        <h4 className="mt-3">Please Sign In</h4>
+        <form className="d-flex flex-column justify-content-center mx-3 my-4">
+          <div className="form-group">
+            <input
+              placeholder="username"
+              className="form-control rounded-top rounded-0"
+              onChange={(e) => setUsername(e.target.value)}
+            ></input>
+          </div>
+          <div className="form-group">
+            <input
+              placeholder="password"
+              type="password"
+              className="form-control rounded-bottom rounded-0"
+              onChange={(e) => setPassword(e.target.value)}
+            ></input>
+          </div>
+        </form>
+        {loginFailed && (
+          <div className="alert alert-danger">Wrong Username or Password</div>
+        )}
+        <button className="btn btn-primary mt-1 mb-1" onClick={attemptLogin}>
+          {" "}
+          Submit
+        </button>{" "}
+        <br />
         <div className="d-flex align-items-center my-2 mx-3">
           <hr className="flex-grow-1" />
           <span className="mx-2">
@@ -97,10 +105,14 @@ export default function Login() {
           </span>
           <hr className="flex-grow-1" />
         </div>
-          <button type="button" className = "btn btn-dark p-3 rounded rounded-4 mb-4" onClick={handleGoogleLogin}>
-            <FaGoogle style={{ fontSize: '1.75rem' }} className="me-2"/>
-            Sign in with Google
-          </button>
+        <button
+          type="button"
+          className="btn btn-dark p-3 rounded rounded-4 mb-4"
+          onClick={handleGoogleLogin}
+        >
+          <FaGoogle style={{ fontSize: "1.75rem" }} className="me-2" />
+          Sign in with Google
+        </button>
         <br />
         Don't have an account? <Link to="/SignUp">Sign up</Link> <br />
         Viewing this as part of my portfolio? <Link to="/">Click here</Link>

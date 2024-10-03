@@ -15,10 +15,11 @@ import axios from "axios";
 import TempNav from "./Account/TempNav";
 import Callback from "./Account/Callback";
 import ProtectedRoute from "./ProtectedRoute";
-import CameraFeed from "./CameraFeed"
+import CameraFeed from "./CameraFeed";
 import Session from "./Session";
 import FeederSettings from "./FeederSettings";
 import SignUp from "./Account/SignUp";
+import Homepage from "./Homepage";
 
 function App() {
   return (
@@ -27,18 +28,9 @@ function App() {
         <BrowserRouter>
           {/* Establish a div for your the Routes */}
           <Routes>
-            <Route path="/" element={<Navigate to="TempNav" />} />
+            <Route path="/" element={<Navigate to="home" />} />
             <Route path="/Login" element={<Login />} />
             <Route path="/SignUp" element={<SignUp />} />
-
-            <Route
-              path="/TempNav"
-              element={
-                <ProtectedRoute>
-                  <TempNav />
-                </ProtectedRoute>
-              }
-            />
             <Route
               path="/livefeed"
               element={
@@ -52,6 +44,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <FeederSettings />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/home"
+              element={
+                <ProtectedRoute>
+                  <Homepage />
                 </ProtectedRoute>
               }
             />
