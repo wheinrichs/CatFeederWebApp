@@ -5,6 +5,7 @@ import { FaGoogle } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentUser } from "./reducer";
+import { RotatingLines } from "react-loader-spinner";
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 
 export default function Login() {
@@ -94,8 +95,15 @@ export default function Login() {
   return (
     <div>
       {showNotification && (
-        <div className="container-fluid vh-100 d-flex justify-content-center align-items-center bg-opacity-50">
-          <h1>LOADING THE SERVER</h1>
+        <div className="container-fluid vh-100 d-flex flex-column justify-content-center align-items-center bg-opacity-50">
+          <h1>Server Starting Up</h1>
+          <RotatingLines
+      strokeColor="grey"
+      strokeWidth="5"
+      animationDuration="0.75"
+      width="96"
+      visible={true}
+    />
         </div>
       )}
 
