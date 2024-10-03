@@ -32,7 +32,7 @@ export default function SignUp() {
     const loginState = await client.checkLoginState();
     if (loginState !== false && loginState !== null) {
       console.log("trying to reroute");
-      navigate("/TempNav");
+      navigate("/home");
     }
   };
 

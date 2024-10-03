@@ -12,7 +12,6 @@ import {
 } from "react-router-dom";
 import Login from "./Account/Login";
 import axios from "axios";
-import TempNav from "./Account/TempNav";
 import Callback from "./Account/Callback";
 import ProtectedRoute from "./ProtectedRoute";
 import CameraFeed from "./CameraFeed";
