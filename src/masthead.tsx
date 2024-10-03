@@ -19,11 +19,16 @@ export default function Masthead() {
     }
   };
 
+  const navHomeButton = () => {
+    navigate("/home")
+  };
+
   return (
     <div>
       <header className="masthead mb-auto">
         <div className="inner">
-          <div className="masthead-brand d-flex flex-row justify-content-center">
+          <div className="masthead-brand d-flex flex-row justify-content-center" onClick={navHomeButton} style={{ cursor: 'pointer' }}
+          >
             <img src="/PetFeederLogo.png" height="35" />
             <h3 className="ms-2">Pet Feeder</h3>
           </div>
