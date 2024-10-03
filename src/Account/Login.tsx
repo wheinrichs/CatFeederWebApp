@@ -96,12 +96,12 @@ export default function Login() {
     <div>
       {showNotification && (
         <div className="container-fluid vh-100 d-flex flex-column justify-content-center align-items-center bg-opacity-50">
-          <h1>Server Starting Up</h1>
+          <h2>Server Starting Up</h2>
           <RotatingLines
       strokeColor="grey"
       strokeWidth="5"
       animationDuration="0.75"
-      width="96"
+      width="50"
       visible={true}
     />
         </div>
