@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCurrentUser } from "./reducer";
 import { RotatingLines } from "react-loader-spinner";
 import footer from "../footer";
+import Footer from "../footer";
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 
 export default function Login() {
@@ -110,8 +111,9 @@ export default function Login() {
         </div>
       )}
 
-      <div className="container-fluid vh-100 d-flex justify-content-center align-items-center bg-opacity-50">
-        <div
+<div className="container-fluid vh-100 d-flex flex-column align-items-center">
+<div className="d-flex flex-column flex-grow-1 justify-content-center">
+          <div
           className=" rounded p-2 text-center"
           style={{ width: "600px", overflow: "auto" }}
         >
@@ -163,10 +165,11 @@ export default function Login() {
         </div>
         
       </div>
-      <div className = "mt-auto">
-
-      {footer()}
+      <div className="mt-auto">
+        <Footer />
       </div>
+      </div>
+
     </div>
     </div>
   );

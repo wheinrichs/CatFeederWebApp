@@ -7,6 +7,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 import { MdDelete } from "react-icons/md";
 import masthead from "../masthead";
 import footer from "../footer";
+import Footer from "../footer";
 
 export default function FeederSettings() {
   const [times, setTimes] = useState({} as any);
@@ -461,7 +462,7 @@ export default function FeederSettings() {
         </div>
         <div className = "mt-auto">
 
-        {footer()}
+        <Footer />
         </div>
       </div>
     </div>

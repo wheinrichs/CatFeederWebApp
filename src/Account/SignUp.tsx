@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentUser } from "./reducer";
 import footer from "../footer";
+import Footer from "../footer";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -106,88 +107,93 @@ export default function SignUp() {
   };
 
   return (
-    <div className="container-fluid vh-100 d-flex justify-content-center align-items-center">
-      <div
-        className=" p-2 text-center"
-        style={{ width: "600px", overflow: "auto" }} // Set fixed width and height
-      >
-        <h1>Sign Up</h1>
-        <h4>Welcome! Register a new account.</h4>
-        <input
-          placeholder="Name"
-          className="form-control"
-          onChange={(e) => setName(e.target.value)}
-          style={{ margin: "10px auto" }}
-        ></input>
-        <input
-          placeholder="Email"
-          type="email"
-          className="form-control"
-          onChange={(e) => setEmail(e.target.value)}
-          style={{ margin: "10px auto" }}
-        ></input>
-        <input
-          placeholder="Username"
-          className="form-control"
-          onChange={(e) => setUsername(e.target.value)}
-          style={{ margin: "10px auto" }}
-        ></input>
-        <input
-          placeholder="Password"
-          type="password"
-          className="form-control"
-          onChange={(e) => checkPasswordCriteria(e)}
-          style={{ margin: "10px auto" }}
-        ></input>
-        <input
-          placeholder="Confirm password"
-          type="password"
-          className="form-control"
-          onChange={(e) => assignPasswordConfirm(e)}
-          style={{ margin: "10px auto" }}
-        ></input>
-        {(!passwordsMatch || !passwordsMeetCritera || !usernameAvailable) && (
-          <div className="alert alert-danger">
-            {!passwordsMeetCritera && (
-              <div>
-                Password must contain: 7 Letters, 1 Number, 1 Special Character
-              </div>
-            )}
-            {!usernameAvailable && <div>Username Unavailable</div>}
-            {!passwordsMatch && <div>Passwords Must Match</div>}
-          </div>
-        )}
-        {passwordsMatch && passwordsMeetCritera && usernameAvailable && (
-          <div>
-            <button
-              className="btn btn-primary mt-1 mb-1"
-              onClick={submitNewUser}
-            >
-              {" "}
-              Submit
-            </button>{" "}
-            <br />
-          </div>
-        )}
-        <div className="d-flex align-items-center my-2 mx-3">
-          <hr className="flex-grow-1" />
-          <span className="mx-2">
-            <strong>or</strong>
-          </span>
-          <hr className="flex-grow-1" />
-        </div>
-        <button
-          type="button"
-          className="btn btn-dark p-3 rounded rounded-4 mb-4"
-          onClick={handleGoogleLogin}
+    <div className="container-fluid vh-100 d-flex flex-column align-items-center">
+      <div className="d-flex flex-column flex-grow-1 justify-content-center">
+        <div
+          className=" p-2 text-center"
+          style={{ width: "600px", overflow: "auto" }} // Set fixed width and height
         >
-          <FaGoogle style={{ fontSize: "1.75rem" }} className="me-2" />
-          Sign up with Google
-        </button>
-        <br />
-        Already have an account? <Link to="/">Sign In</Link> <br />
+          <h1>Sign Up</h1>
+          <h4>Welcome! Register a new account.</h4>
+          <input
+            placeholder="Name"
+            className="form-control"
+            onChange={(e) => setName(e.target.value)}
+            style={{ margin: "10px auto" }}
+          ></input>
+          <input
+            placeholder="Email"
+            type="email"
+            className="form-control"
+            onChange={(e) => setEmail(e.target.value)}
+            style={{ margin: "10px auto" }}
+          ></input>
+          <input
+            placeholder="Username"
+            className="form-control"
+            onChange={(e) => setUsername(e.target.value)}
+            style={{ margin: "10px auto" }}
+          ></input>
+          <input
+            placeholder="Password"
+            type="password"
+            className="form-control"
+            onChange={(e) => checkPasswordCriteria(e)}
+            style={{ margin: "10px auto" }}
+          ></input>
+          <input
+            placeholder="Confirm password"
+            type="password"
+            className="form-control"
+            onChange={(e) => assignPasswordConfirm(e)}
+            style={{ margin: "10px auto" }}
+          ></input>
+          {(!passwordsMatch || !passwordsMeetCritera || !usernameAvailable) && (
+            <div className="alert alert-danger">
+              {!passwordsMeetCritera && (
+                <div>
+                  Password must contain: 7 Letters, 1 Number, 1 Special
+                  Character
+                </div>
+              )}
+              {!usernameAvailable && <div>Username Unavailable</div>}
+              {!passwordsMatch && <div>Passwords Must Match</div>}
+            </div>
+          )}
+          {passwordsMatch && passwordsMeetCritera && usernameAvailable && (
+            <div>
+              <button
+                className="btn btn-primary mt-1 mb-1"
+                onClick={submitNewUser}
+              >
+                {" "}
+                Submit
+              </button>{" "}
+              <br />
+            </div>
+          )}
+          <div className="d-flex align-items-center my-2 mx-3">
+            <hr className="flex-grow-1" />
+            <span className="mx-2">
+              <strong>or</strong>
+            </span>
+            <hr className="flex-grow-1" />
+          </div>
+          <button
+            type="button"
+            className="btn btn-dark p-3 rounded rounded-4 mb-4"
+            onClick={handleGoogleLogin}
+          >
+            <FaGoogle style={{ fontSize: "1.75rem" }} className="me-2" />
+            Sign up with Google
+          </button>
+          <br />
+          Already have an account? <Link to="/">Sign In</Link> <br />
+        </div>
       </div>
-      {footer()}
+      <div className="mt-auto">
+        <Footer />
+      </div>
     </div>
   );
 }

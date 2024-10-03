@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import * as client from "../Account/client";
 import { setCurrentUser } from "../Account/reducer";
 import footer from "../footer";
+import Footer from "../footer";
 
 export default function Homepage() {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
@@ -59,7 +60,7 @@ export default function Homepage() {
           </main>
         </div>
         <div className = "mt-auto">
-        {footer()}
+        <Footer />
         </div>
       </div>
     </div>

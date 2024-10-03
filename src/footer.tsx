@@ -1,4 +1,4 @@
-export default function footer() {
+export default function Footer() {
   return (
     <div>
       <footer className="mastfoot mt-auto">
