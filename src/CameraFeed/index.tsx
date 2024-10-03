@@ -1,5 +1,6 @@
 import React from "react";
 import masthead from "../masthead";
+import footer from "../footer";
 
 export default function CameraFeed() {
   const videoUrl = "https://stream.jarvisfeeders1234.win/"; // Your proxy server URL
@@ -20,11 +21,10 @@ export default function CameraFeed() {
             </div>
           </main>
         </div>
-        <footer className="mastfoot mt-auto">
-          <div className="inner">
-            <p>Project Created by Winston Heinrichs - 2024</p>
-          </div>
-        </footer>
+        <div className = "mt-auto">
+
+        {footer()}
+        </div>
       </div>
     </div>
   );

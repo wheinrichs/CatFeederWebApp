@@ -5,6 +5,7 @@ import { FaGoogle } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentUser } from "./reducer";
+import footer from "../footer";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -186,6 +187,7 @@ export default function SignUp() {
         <br />
         Already have an account? <Link to="/">Sign In</Link> <br />
       </div>
+      {footer()}
     </div>
   );
 }

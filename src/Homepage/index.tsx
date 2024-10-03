@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import * as client from "../Account/client";
 import { setCurrentUser } from "../Account/reducer";
+import footer from "../footer";
 
 export default function Homepage() {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
@@ -57,11 +58,9 @@ export default function Homepage() {
             </p>
           </main>
         </div>
-        <footer className="mastfoot mt-auto">
-          <div className="inner">
-            <p>Project Created by Winston Heinrichs - 2024</p>
-          </div>
-        </footer>
+        <div className = "mt-auto">
+        {footer()}
+        </div>
       </div>
     </div>
   );

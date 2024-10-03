@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentUser } from "./reducer";
 import { RotatingLines } from "react-loader-spinner";
+import footer from "../footer";
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 
 export default function Login() {
@@ -94,6 +95,8 @@ export default function Login() {
 
   return (
     <div>
+ 
+    <div>
       {showNotification && (
         <div className="container-fluid vh-100 d-flex flex-column justify-content-center align-items-center bg-opacity-50">
           <h2>Server Starting Up</h2>
@@ -158,7 +161,13 @@ export default function Login() {
           Don't have an account? <Link to="/SignUp">Sign up</Link> <br />
           Viewing this as part of my portfolio? <Link to="/">Click here</Link>
         </div>
+        
       </div>
+      <div className = "mt-auto">
+
+      {footer()}
+      </div>
+    </div>
     </div>
   );
 }
