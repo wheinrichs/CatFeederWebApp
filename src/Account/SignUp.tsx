@@ -107,7 +107,7 @@ export default function SignUp() {
   };
 
   return (
-    <div className="container-fluid vh-100 d-flex flex-column align-items-center">
+    <div className="container-fluid d-flex flex-column align-items-center" style={{  height: "100dvh"}}>
       <div className="d-flex flex-column flex-grow-1 justify-content-center">
         <div
           className=" p-2 text-center"

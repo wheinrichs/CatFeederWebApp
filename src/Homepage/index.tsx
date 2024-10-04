@@ -32,7 +32,7 @@ export default function Homepage() {
   }, [])
 
   return (
-    <div className="text-center vh-100">
+    <div className="text-center" style={{  height: "100dvh"}}>
       <div className="cover-container d-flex h-100 p-3 mx-auto flex-column">
         <div className="mb-auto">{masthead()}</div>
         <div className="content-view">

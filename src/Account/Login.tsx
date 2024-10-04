@@ -98,7 +98,7 @@ export default function Login() {
     <div>
       <div>
         {showNotification && (
-          <div className="container-fluid vh-100 d-flex flex-column justify-content-center align-items-center bg-opacity-50">
+          <div className="container-fluid d-flex flex-column justify-content-center align-items-center bg-opacity-50" style={{  height: "100dvh"}}>
             <h2>Server Starting Up</h2>
             <RotatingLines
               strokeColor="grey"
