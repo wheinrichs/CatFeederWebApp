@@ -111,8 +111,8 @@ export default function SignUp() {
       <div className="d-flex flex-column flex-grow-1 justify-content-center">
         <div
           className=" p-2 text-center"
-          style={{ width: "600px", overflow: "auto" }} // Set fixed width and height
-        >
+          style={{ width: "100%", maxWidth: "600px", overflow: "auto" }}
+          >
           <h1>Sign Up</h1>
           <h4>Welcome! Register a new account.</h4>
           <input

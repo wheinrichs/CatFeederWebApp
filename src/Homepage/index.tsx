@@ -31,19 +31,6 @@ export default function Homepage() {
     getPosts();
   }, [])
 
-  const handleLogout = async() => {
-      try {
-          await client.handleLogout();
-          dispatch(setCurrentUser(null));
-          localStorage.removeItem('token');
-          console.log("successful logout")
-          navigate("/Login")
-      }
-      catch {
-          console.log("ERROR LOGGING OUT");
-      }
-  }
-
   return (
     <div className="text-center vh-100">
       <div className="cover-container d-flex h-100 p-3 mx-auto flex-column">

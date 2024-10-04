@@ -190,17 +190,19 @@ export default function FeederSettings() {
   console.log("schedule is: ", schedule);
 
   return (
-    <div className="text-center vh-100">
+    <div className="container-fluid text-center vh-100">
       <div className="cover-container d-flex h-100 p-3 mx-auto flex-column">
         <div className="mb-auto">{masthead()}</div>
         <div className="content-wrapper">
           <main role="main" className="inner cover">
             <div>
               <div
-                className="bg-secondary bg-opacity-50 position-fixed w-100 h-100"
+                className="bg-secondary bg-opacity-50 position-fixed w-100= h-100"
                 style={{ zIndex: -1 }}
               ></div>
-              <div className="container-fluid vh-100 d-flex justify-content-center position-relative">
+              <div className="container-fluid vh-100 d-flex justify-content-center position-relative"
+                        style={{ width: "100%", maxWidth: "600px", overflow: "auto" }}
+>
                 <div className="p-2 text-center">
                   <h1 className="mb-3">Feeder Settings</h1>
                   <div className="container border border-2 border-light my-5 p-4 rounded-4">
