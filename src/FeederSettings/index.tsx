@@ -191,19 +191,19 @@ export default function FeederSettings() {
 
   return (
     <div className="container-fluid text-center vh-100">
-      <div className="cover-container d-flex h-100 p-3 mx-auto flex-column">
-        <div className="mb-auto">{masthead()}</div>
+      <div className="cover-container d-flex h-100 mx-auto flex-column">
+        <div className="mb-auto p-3">{masthead()}</div>
         <div className="content-wrapper">
-          <main role="main" className="inner cover">
+          <main role="main">
             <div>
               <div
-                className="bg-secondary bg-opacity-50 position-fixed w-100= h-100"
-                style={{ zIndex: -1 }}
+                className="bg-secondary bg-opacity-50 position-fixed w-100 h-100"
+                style={{ zIndex: -1}}
               ></div>
-              <div className="container-fluid vh-100 d-flex justify-content-center position-relative"
-                        style={{ width: "100%", maxWidth: "600px", overflow: "auto" }}
+              <div className="container-fluid d-flex justify-content-center position-relative"
+                        style={{ width: "100%", maxWidth: "600px", overflow: "hidden"}}
 >
-                <div className="p-2 text-center">
+                <div className="text-center">
                   <h1 className="mb-3">Feeder Settings</h1>
                   <div className="container border border-2 border-light my-5 p-4 rounded-4">
                     <div className="row align-items-center">
@@ -229,7 +229,7 @@ export default function FeederSettings() {
                   {schedule.map((day: any) => (
                     <div className="border border-2 border-light m-2 p-4 rounded-4">
                       <div
-                        className="btn-group btn-group-lg mb-3"
+                        className="btn-group btn-group-lg flex-wrap mb-3"
                         role="group"
                         aria-label="Basic checkbox toggle button group"
                       >
