@@ -190,7 +190,7 @@ export default function FeederSettings() {
   console.log("schedule is: ", schedule);
 
   return (
-    <div className="container-fluid text-center vh-100">
+    <div className="container-fluid text-center" style={{  height: "100dvh"}}>
       <div className="cover-container d-flex h-100 mx-auto flex-column">
         <div className="mb-auto p-3">{masthead()}</div>
         <div className="content-wrapper">
