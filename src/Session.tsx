@@ -6,7 +6,14 @@ import { useDispatch } from "react-redux";
 export default function Session({ children }: { children: any }) {
   const [pending, setPending] = useState(true);
   const [showLoading, setShowLoading] = useState(false);
+  const [messageIndex, setMessageIndex] = useState(0);
 
+  const messages = [
+    "Server starting up",
+    "Thank you for your patience",
+    "Cold starts, am I right?",
+    "Accepting donations to pay for server time!",
+  ];
   const dispatch = useDispatch();
   const fetchProfile = async () => {
     try {
@@ -20,13 +27,21 @@ export default function Session({ children }: { children: any }) {
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowLoading(true); // Show loading after 1 second
+    const showLoadingTimer = setTimeout(() => {
+      setShowLoading(true);
     }, 1000);
 
     fetchProfile();
-    return () => clearTimeout(timer);
-  }, []);
+
+    // Update message every 20 seconds
+    const messageInterval = setInterval(() => {
+      setMessageIndex((prevIndex) => (prevIndex + 1) % messages.length);
+    }, 10000);
+
+    return () => {
+      clearTimeout(showLoadingTimer);
+      clearInterval(messageInterval);
+    };  }, []);
 
   if (pending) {
     if (showLoading) {
@@ -36,7 +51,7 @@ export default function Session({ children }: { children: any }) {
           className="container-fluid d-flex flex-column justify-content-center align-items-center bg-opacity-50"
           style={{ height: "100dvh" }}
         >
-          <h2>Server Starting Up</h2>
+          <h2>{messages[messageIndex]}</h2>
           <RotatingLines
             strokeColor="grey"
             strokeWidth="5"
