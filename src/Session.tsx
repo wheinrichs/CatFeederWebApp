@@ -5,10 +5,12 @@ import { RotatingLines } from "react-loader-spinner";
 import { useDispatch } from "react-redux";
 export default function Session({ children }: { children: any }) {
   const [pending, setPending] = useState(true);
+  const [showLoading, setShowLoading] = useState(false);
+
   const dispatch = useDispatch();
   const fetchProfile = async () => {
     try {
-      console.log("Currently waiting for sessino server")
+      console.log("Currently waiting for session server")
       const currentUser = await client.checkLoginState();
       dispatch(setCurrentUser(currentUser));
     } catch (err: any) {
@@ -18,10 +20,14 @@ export default function Session({ children }: { children: any }) {
   };
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowLoading(true);  // Show loading after 1 second
+    }, 1000);
+
     fetchProfile();
   }, []);
 
-  if (pending) {
+  if (pending && showLoading) {
     // Show "Server Starting Up" message while waiting for the fetchProfile to finish
     return (
       <div className="container-fluid d-flex flex-column justify-content-center align-items-center bg-opacity-50" style={{ height: "100dvh" }}>

@@ -31,30 +31,8 @@ export default function Login() {
     }
   };
 
-  const [loading, setLoading] = useState(false);
-  const [showNotification, setShowNotification] = useState(false);
-
   useEffect(() => {
-    const checkServerStatus = async () => {
-      setLoading(true);
-      setShowNotification(true);
-      try {
-        const response = await fetch(`${serverUrl}`); // Change this to your backend URL
-        if (!response.ok) {
-          throw new Error("Server not reachable");
-        }
-        // Handle successful response
-      } catch (error) {
-        console.error(error);
-        // Optionally handle the error
-      } finally {
-        setLoading(false);
-        setShowNotification(false);
-        checkLoggedIn();
-      }
-    };
-
-    checkServerStatus();
+    checkLoggedIn();
   }, []);
 
   const attemptLogin = async () => {
@@ -94,19 +72,6 @@ export default function Login() {
   return (
     <div>
       <div>
-        {showNotification && (
-          <div className="container-fluid d-flex flex-column justify-content-center align-items-center bg-opacity-50" style={{  height: "100dvh"}}>
-            <h2>Server Starting Up</h2>
-            <RotatingLines
-              strokeColor="grey"
-              strokeWidth="5"
-              animationDuration="0.75"
-              width="50"
-              visible={true}
-            />
-          </div>
-        )}
-
         <div className="container-fluid vh-100 d-flex flex-column align-items-center">
           <div className="d-flex flex-column flex-grow-1 justify-content-center">
             <div
