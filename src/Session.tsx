@@ -8,6 +8,7 @@ export default function Session({ children }: { children: any }) {
   const dispatch = useDispatch();
   const fetchProfile = async () => {
     try {
+      console.log("Currently waiting for sessino server")
       const currentUser = await client.checkLoginState();
       dispatch(setCurrentUser(currentUser));
     } catch (err: any) {
@@ -20,27 +21,22 @@ export default function Session({ children }: { children: any }) {
     fetchProfile();
   }, []);
 
-  if (!pending) {
-    return children;
+  if (pending) {
+    // Show "Server Starting Up" message while waiting for the fetchProfile to finish
+    return (
+      <div className="container-fluid d-flex flex-column justify-content-center align-items-center bg-opacity-50" style={{ height: "100dvh" }}>
+        <h2>Server Starting Up</h2>
+        <RotatingLines
+          strokeColor="grey"
+          strokeWidth="5"
+          animationDuration="0.75"
+          width="50"
+          visible={true}
+        />
+      </div>
+    );
   }
 
-  return (
-    <div>
-      <div>
-        {!pending && (
-          <div className="container-fluid d-flex flex-column justify-content-center align-items-center bg-opacity-50" style={{  height: "100dvh"}}>
-            <h2>Server Starting Up</h2>
-            <RotatingLines
-              strokeColor="grey"
-              strokeWidth="5"
-              animationDuration="0.75"
-              width="50"
-              visible={true}
-            />
-          </div>
-        )}
-        </div>
-        </div>
-        )
-        
+  // Once pending is false, render the children components
+  return <>{children}</>;
 }
