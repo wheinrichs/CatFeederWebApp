@@ -50,6 +50,7 @@ export default function Login() {
       } finally {
         setLoading(false);
         setShowNotification(false);
+        checkLoggedIn();
       }
     };
 
@@ -87,10 +88,6 @@ export default function Login() {
       console.error("An error occurred during login:", error);
     }
   };
-
-  useEffect(() => {
-    checkLoggedIn();
-  }, []);
 
   useEffect(() => {}, [loginFailed]);
 
