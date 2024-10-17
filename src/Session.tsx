@@ -10,7 +10,7 @@ export default function Session({ children }: { children: any }) {
   const dispatch = useDispatch();
   const fetchProfile = async () => {
     try {
-      console.log("Currently waiting for session server")
+      console.log("Currently waiting for session server");
       const currentUser = await client.checkLoginState();
       dispatch(setCurrentUser(currentUser));
     } catch (err: any) {
@@ -21,26 +21,33 @@ export default function Session({ children }: { children: any }) {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setShowLoading(true);  // Show loading after 1 second
+      setShowLoading(true); // Show loading after 1 second
     }, 1000);
 
     fetchProfile();
+    return () => clearTimeout(timer);
   }, []);
 
-  if (pending && showLoading) {
-    // Show "Server Starting Up" message while waiting for the fetchProfile to finish
-    return (
-      <div className="container-fluid d-flex flex-column justify-content-center align-items-center bg-opacity-50" style={{ height: "100dvh" }}>
-        <h2>Server Starting Up</h2>
-        <RotatingLines
-          strokeColor="grey"
-          strokeWidth="5"
-          animationDuration="0.75"
-          width="50"
-          visible={true}
-        />
-      </div>
-    );
+  if (pending) {
+    if (showLoading) {
+      // Show "Server Starting Up" message while waiting for the fetchProfile to finish
+      return (
+        <div
+          className="container-fluid d-flex flex-column justify-content-center align-items-center bg-opacity-50"
+          style={{ height: "100dvh" }}
+        >
+          <h2>Server Starting Up</h2>
+          <RotatingLines
+            strokeColor="grey"
+            strokeWidth="5"
+            animationDuration="0.75"
+            width="50"
+            visible={true}
+          />
+        </div>
+      );
+    }
+    return null;
   }
 
   // Once pending is false, render the children components
