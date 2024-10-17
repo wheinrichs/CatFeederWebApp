@@ -421,14 +421,14 @@ export default function FeederSettings() {
                 aria-hidden="true"
               >
                 <div className="modal-dialog">
-                  <div className="modal-content">
+                  <div className="modal-content" style={{ backgroundColor: "#333333" }}>
                     <div className="modal-header">
                       <h5 className="modal-title" id="confirmationModalLabel">
                         Confirm Delete
                       </h5>
                       <button
                         type="button"
-                        className="btn-close"
+                        className="btn-close btn-close-white"
                         data-bs-dismiss="modal"
                         aria-label="Close"
                       ></button>
