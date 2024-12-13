@@ -222,7 +222,7 @@ export default function FeederSettings() {
                       </div>
 
                       <label htmlFor="portionBox" className="col-auto">
-                        1/8 Cups At Each Time
+                        1/6 Cups At Each Time
                       </label>
                     </div>
                   </div>
