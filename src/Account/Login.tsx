@@ -43,13 +43,13 @@ export default function Login() {
         console.log("Login successful");
         console.log("response is: ", response);
         const {
-          data: { user, accessToken },
+          data: { user, sessionToken },
         } = response;
         console.log(
           "Token received in front end in attempt login is: ",
-          accessToken
+          sessionToken
         );
-        localStorage.setItem("token", accessToken);
+        localStorage.setItem("token", sessionToken);
         dispatch(setCurrentUser(user));
         navigate("/");
       } else if (response.response.status === 400) {

@@ -11,12 +11,12 @@ export default function Callback() {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   useEffect(() => {
     console.log("LOGGING FROM CALLBACK");
     (async () => {
       if (currentUser === null) {
         try {
-        
           if (called.current) return; // prevent rerender caused by StrictMode
           called.current = true;
           const res = await axios.get(
@@ -24,9 +24,11 @@ export default function Callback() {
           );
           console.log("response: ", res);
           const {
-            data: { loggedIn: logged_in, user, accessToken },
+            data: { loggedIn: logged_in, user, sessionToken, accessToken },
           } = res;
-          localStorage.setItem('token', accessToken);
+          localStorage.setItem('token', sessionToken);
+          localStorage.setItem('accessToken', accessToken);
+
           console.log("Callback user is: ", user)
           dispatch(setCurrentUser(user));
           navigate("/");

@@ -98,9 +98,9 @@ export default function SignUp() {
     } else {
       const response = (await client.attemptLocalLogin(newUser)) as any;
       const {
-        data: { user, accessToken },
+        data: { user, sessionToken },
       } = response;
-      localStorage.setItem("token", accessToken);
+      localStorage.setItem("token", sessionToken);
       dispatch(setCurrentUser(user));
       navigate("/");
     }
