@@ -41,7 +41,7 @@ export default function Homepage() {
             <p className="lead">Should we check on your furry friend?</p>
             <p className="lead">
               <a href="/livefeed" className="btn btn-lg btn-secondary">
-                Live Feed
+                Camera
               </a>
             </p>
           </main>

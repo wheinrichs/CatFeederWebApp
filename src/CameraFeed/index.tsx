@@ -140,7 +140,7 @@ export default function CameraFeed() {
               <div>
                 <button
                   type="button"
-                  className="btn btn-primary"
+                  className="btn btn-primary mt-1"
                   onClick={() => setLiveView(false)}
                 >
                   View Recordings
@@ -181,7 +181,7 @@ export default function CameraFeed() {
                 </div>
                 {videos.length !== 0 ? (
                   <div
-                    className="h-100 p-3 border rounded-2 py-2 flex-grow-1"
+                    className="h-100 p-3 rounded-2 py-2 flex-grow-1"
                     style={{ overflow: "auto" }}
                   >
 
@@ -241,7 +241,7 @@ export default function CameraFeed() {
                               <ul className="list-unstyled">
                                 {dateSelected &&
                                   groupedVideos[dateSelected].map((video) => (
-                                    <li className="my-2">
+                                    <li className="my-2 me-4">
                                       <button
                                         className="btn btn-light text-start d-flex justify-content-between align-items-center"
                                         style={{ width: "100%" }}

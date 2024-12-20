@@ -51,7 +51,7 @@ export default function Masthead() {
               }`}
               href="/livefeed"
             >
-              Live Feed
+              Camera
             </a>
             <a
               className={`nav-link ${
