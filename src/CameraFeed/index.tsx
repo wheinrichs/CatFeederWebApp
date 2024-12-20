@@ -5,7 +5,11 @@ import Footer from "../footer";
 import { access } from "fs";
 import axios from "axios";
 import * as client from "./client";
-import "./index.css"
+import "./index.css";
+import { IoMdArrowRoundBack } from "react-icons/io";
+import { CiViewList } from "react-icons/ci";
+import { RiGalleryView2 } from "react-icons/ri";
+
 import { group } from "console";
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 
@@ -14,7 +18,6 @@ export default function CameraFeed() {
   const accessToken = localStorage.getItem("accessToken");
   const sessionToken = localStorage.getItem("token");
   const folderName = "PetFeederRecordings";
-
 
   const [videos, setVideos] = useState<
     { id: any; name: any; webViewLink: any }[]
@@ -26,7 +29,7 @@ export default function CameraFeed() {
   const [dateSelected, setDateSelected] = useState<any | null>(null);
   const [videoSelected, setVideoSelected] = useState<any | null>(null);
   const [liveView, setLiveView] = useState<Boolean>(true);
-
+  const [listView, setListView] = useState<Boolean>(true);
 
   const [groupedVideos, setGroupedVideos] = useState<Record<string, any[]>>({});
 
@@ -101,11 +104,11 @@ export default function CameraFeed() {
       setVideos(allFiles); // Set all files after fetching all pages
     }
   };
-  
+
   const selectVideo = (video: any) => {
-    setVideoSelected(video)
-    setLiveView(false)
-  }
+    setVideoSelected(video);
+    setLiveView(false);
+  };
 
   useEffect(() => {
     getRecordingFolderID();
@@ -119,98 +122,230 @@ export default function CameraFeed() {
     processVideoDatesAndTimes();
   }, [videos]);
 
+  useEffect(() => {}, [dateSelected, listView]);
+
   console.log("videos: ", videos);
   console.log("Session token is: ", sessionToken);
   console.log("FolderID is ", folderID);
   console.log("access token is: ", accessToken);
-  console.log("selected date is: ", dateSelected)
-  console.log(groupedVideos)
+  console.log("selected date is: ", dateSelected);
+  console.log(groupedVideos);
   return (
     <div className="text-center" style={{ height: "100dvh" }}>
       <div className="cover-container d-flex h-100 p-3 mx-auto flex-column">
         <div className="mb-auto">{masthead()}</div>
-        <div className="content-wrapper">
-          <main role="main" className="inner cover">
+        <div className="content-wrapper h-100">
+          <main role="main" className="inner cover h-100">
             {liveView ? (
-            <div className="video-container my-3">
-              <img
-                src={`${videoUrl}?token=${sessionToken}`} // Append the token to the URL as a query parameter
-                alt="Video Feed"
-                className="responsive-img"
-              />
-            </div>
-            ) :
-            (
               <div>
-              <h3>{`${videoSelected.date} at ${videoSelected.time}`}</h3>
-                  <video
-                    className="responsive-video"
-                    controls
-                    width="500"
-                    src={`${serverUrl}/api/video/${videoSelected.id}?accessToken=${accessToken}`}
-                  >
-                    Your browser does not support the video tag.
-                  </video>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => setLiveView(false)}
+                >
+                  View Recordings
+                </button>
+                <div className="video-container my-3">
+                  <img
+                    src={`${videoUrl}?token=${sessionToken}`} // Append the token to the URL as a query parameter
+                    alt="Video Feed"
+                    className="responsive-img"
+                  />
+                </div>
               </div>
-            )
+            ) : (
+              <div className="h-100 d-flex flex-column">
+                <div className="d-flex justify-content-between align-items-center mb-2">
+                  <button
+                    type="button"
+                    className="btn btn-primary mb-2 mt-1"
+                    onClick={() => setLiveView(true)}
+                  >
+                    Back to Live View
+                  </button>
 
-}
-
-            <div className="container border rounded-2">
-              <div className="row" >
-                <div className="col-4">
                   <div>
-                    <div className="menu">
-                      <ul className="list-unstyled">
-                        {processedVideos &&
-                          Object.keys(groupedVideos).map((date) => (
-                            <li className="my-2">
-                              <button
-                                className="btn btn-light text-start d-flex justify-content-between align-items-center"
-                                style={{ width: "100%" }}
-                                // onClick={(e) => displayTimestamps(date)}
-                                onClick={() => setDateSelected(date)}
-                              >
-                                <span>{date}</span>
-                                <span className="badge bg-primary">{groupedVideos[date].length}</span>
-                              </button>
-                            </li>
-                          ))}
-
-                        <li className="my-2">
-                          <hr className="dropdown-divider" />
-                        </li>
-                        <li className="my-2">
-                          <button
-                            className="btn btn-primary text-decoration-none text-start"
-                            style={{ width: "100%" }}
-                            onClick={() => setLiveView(true)}
-                          >
-                            Live View
-                          </button>
-                        </li>
-                      </ul>
-                    </div>
+                    <button
+                      className="btn btn-dark ms-2"
+                      onClick={() => setListView(true)}
+                    >
+                      <CiViewList size={25} />
+                    </button>
+                    <button
+                      className="btn btn-dark ms-1"
+                      onClick={() => setListView(false)}
+                    >
+                      <RiGalleryView2 size={25} />
+                    </button>
                   </div>
                 </div>
-                <div className="col border-start" style={{ maxHeight: "500px", overflowY: "auto" }}>
-                <ul className="list-unstyled m-2">
-                        {dateSelected &&
-                          groupedVideos[dateSelected].map((video) => (
-                            <li className="my-2">
+                {videos.length !== 0 ? (
+                  <div
+                    className="h-100 p-3 border rounded-2 py-2 flex-grow-1"
+                    style={{ overflow: "auto" }}
+                  >
+
+                    {listView ? (
+
+                    <div className="h-100 d-flex flex-column flex-md-row">
+                      <div className="col-sm-12 col-md-4 order-2 order-md-1">
+                        {dateSelected === null ? (
+                          <div>
+                            <div className="menu">
+                              <ul className="list-unstyled">
+                                {processedVideos &&
+                                  Object.keys(groupedVideos).map((date) => (
+                                    <li className="my-2">
+                                      <button
+                                        className="btn btn-light text-start d-flex justify-content-between align-items-center"
+                                        style={{ width: "100%" }}
+                                        onClick={() => setDateSelected(date)}
+                                      >
+                                        <span>{date}</span>
+                                        <span className="badge bg-primary">
+                                          {groupedVideos[date].length}
+                                        </span>
+                                      </button>
+                                    </li>
+                                  ))}
+                                <li className="my-2">
+                                  <hr className="dropdown-divider" />
+                                </li>
+                                <li className="my-2">
+                                  <button
+                                    className="btn btn-primary text-decoration-none text-start"
+                                    style={{ width: "100%" }}
+                                    onClick={() => setLiveView(true)}
+                                  >
+                                    Live View
+                                  </button>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="d-flex flex-column flex-grow-1 h-100">
+                            <div className="d-flex align-items-center">
                               <button
-                                className="btn btn-light text-start d-flex justify-content-between align-items-center"
-                                style={{ width: "100%" }}
-                                onClick={() => selectVideo(video)}
+                                className="btn btn-light ms-2"
+                                onClick={() => setDateSelected(null)}
                               >
-                                <span>{video.time}</span>
+                                <IoMdArrowRoundBack />
                               </button>
-                            </li>
-                          ))}
-                        </ul>
-                </div>
+                              <h4 className="my-2 mx-auto">{dateSelected}</h4>
+                            </div>
+                            <div
+                              className="m-2 h-100"
+                              style={{ overflowY: "auto" }}
+                            >
+                              <ul className="list-unstyled">
+                                {dateSelected &&
+                                  groupedVideos[dateSelected].map((video) => (
+                                    <li className="my-2">
+                                      <button
+                                        className="btn btn-light text-start d-flex justify-content-between align-items-center"
+                                        style={{ width: "100%" }}
+                                        onClick={() => selectVideo(video)}
+                                      >
+                                        <span>{video.time}</span>
+                                      </button>
+                                    </li>
+                                  ))}
+                              </ul>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      <div className="h-100 col-sm-12 col-md-8 order-1 order-md-2">
+                        {videoSelected && (
+                          <div className="h-100">
+                            <h3>{`${videoSelected.date} at ${videoSelected.time}`}</h3>
+                            <video
+                              className="responsive-img"
+                              controls
+                              width="500"
+                              src={`${serverUrl}/api/video/${videoSelected.id}?accessToken=${accessToken}`}
+                            >
+                              Your browser does not support the video tag.
+                            </video>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    ) : (
+                      <div className="h-100 d-flex flex-column flex-md-row">
+                      <div className="col-sm-12 col-md-4">
+                          <div>
+                            <div className="menu">
+                              <ul className="list-unstyled">
+                                {processedVideos &&
+                                  Object.keys(groupedVideos).map((date) => (
+                                    <li className="my-2">
+                                      <button
+                                        className="btn btn-light text-start d-flex justify-content-between align-items-center"
+                                        style={{ width: "100%" }}
+                                        onClick={() => setDateSelected(date)}
+                                      >
+                                        <span>{date}</span>
+                                        <span className="badge bg-primary">
+                                          {groupedVideos[date].length}
+                                        </span>
+                                      </button>
+                                    </li>
+                                  ))}
+                                <li className="my-2">
+                                  <hr className="dropdown-divider" />
+                                </li>
+                                <li className="my-2">
+                                  <button
+                                    className="btn btn-primary text-decoration-none text-start"
+                                    style={{ width: "100%" }}
+                                    onClick={() => setLiveView(true)}
+                                  >
+                                    Live View
+                                  </button>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                          </div>
+
+
+
+
+
+                          <div className="h-100 col-sm-12 col-md-8">
+                            <div className="container">
+                              <div className="row">
+                        {dateSelected && 
+                          groupedVideos[dateSelected].map((video) => (
+                          <div className="col m-2">
+                            <h5>{`${video.time}`}</h5>
+                            <video
+                              controls
+                              width="200"
+                              src={`${serverUrl}/api/video/${video.id}?accessToken=${accessToken}`}
+                            >
+                              Your browser does not support the video tag.
+                            </video>
+                          </div>
+                        ))}
+                        </div>
+                        </div>
+                      </div>
+
+
+
+
+
+                          </div>
+                    )}
+                  </div>
+                ) : (
+                  <h3>No recordings found</h3>
+                )}
               </div>
-            </div>
+            )}
           </main>
         </div>
         <div className="mt-auto">
