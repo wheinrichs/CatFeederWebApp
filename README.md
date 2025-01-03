@@ -3,7 +3,7 @@
 
 **Date: December 1, 2024**
 
-_This code is deployed on render and does not need to be cloned to run the application. It is made public here purely for educational and transparency purposes._
+_This code is deployed on netlify and does not need to be cloned to run the application. It is made public here purely for educational and transparency purposes._
 
 This repo defines the front end react web application that hosts the petfeeder project. The project is deployed on netflify at: 
 
