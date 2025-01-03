@@ -1,8 +1,22 @@
-# Getting Started with Create React App
+# Pet Feeder Project
+**Author: Winston Heinrichs**
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**Date: December 1, 2024**
 
-## Available Scripts
+_This code is deployed on render and does not need to be cloned to run the application. It is made public here purely for educational and transparency purposes._
+
+This repo defines the front end react web application that hosts the petfeeder project. The project is deployed on netflify at: 
+
+https://petfeeder.netlify.app/
+
+This uses React and Boostrap to create and run the web application. It communicates with a backend server hosted on render. It can be viewed at:
+
+https://github.com/wheinrichs/CatFeederWebServer
+
+Thank you for reading through this project and you can [View my portfolio here](https://www.winstonheinrichs.com)
+
+
+## React Generic Instructions
 
 In the project directory, you can run:
 

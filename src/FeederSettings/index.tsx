@@ -1,3 +1,9 @@
+/*
+This file defines the feeder option screen where a user can update when and how
+much the feeder outputs. All communication with the backend server (and consequently
+the database) happens in the client file
+*/
+
 import * as client from "./client";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -6,42 +12,59 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import { MdDelete } from "react-icons/md";
 import masthead from "../masthead";
-import footer from "../footer";
 import Footer from "../footer";
 
 export default function FeederSettings() {
+  const navigate = useNavigate();
+
+  // Set state variables for the times, schedule, and portion for the users account
   const [times, setTimes] = useState({} as any);
   const [schedule, setSchedule] = useState([] as any);
-  const navigate = useNavigate();
-  const [scheduleToDelete, setScheduleToDelete] = useState<string | null>(null);
   const [portion, setPortion] = useState<any>();
 
+  // Create a state variable to store the schedule a user wants to delete during the confirmation modal
+  const [scheduleToDelete, setScheduleToDelete] = useState<string | null>(null);
+
+  // Retrieve the current user from the reducer
   const { currentUser } = useSelector((state: any) => state.accountReducer);
 
+  // Fetch the users preferences from the backend server (and consequently the database)
   const fetchUserPreferences = async () => {
     const fetchedSchedule = await client.getUserPreferences(currentUser._id);
-    console.log("Fetched schedule is: ", fetchedSchedule);
+    // Update the times and portion state variables using this information
     setTimes(fetchedSchedule.schedule as any);
     setPortion(fetchedSchedule.portion);
   };
 
+  // Fetch the user preferences when the screen is loaded for the first time 
   useEffect(() => {
     fetchUserPreferences();
   }, []);
 
+  // Process the schedules when the times are updated
   useEffect(() => {
     processSchedulesForDisplay();
   }, [times]);
 
+  /*
+  Function: processSchedulesForDisplay
+    This function iterates over each entry in the schedule and groups together 
+    days with the same times for display pruposes
+  */ 
   const processSchedulesForDisplay = () => {
     setSchedule((prevSchedule: any) => {
+      // Create anew schedule which is a copy of the current schedule
       let newSchedule = [...prevSchedule];
+      // For each day in the schedule
       for (let key in times) {
+        // Retrieve the time and set a flag to false to represent it hasn't been seen yet
         if (times.hasOwnProperty(key)) {
           let value = times[key];
           let found = false;
-
+          
+          // If the schedule length is not 0
           if (newSchedule.length !== 0) {
+            // Check if the new schdule already contains this time already
             newSchedule = newSchedule.map((sched) => {
               if (value.length === 0 && sched.times.length === 0) {
                 if (!sched.days.includes(key)) {
@@ -61,10 +84,10 @@ export default function FeederSettings() {
             });
           }
 
+          // If the exact times were not found already then create a new schedule entry with a unique ID
           if (!found) {
             const idGen =
               Date.now().toString(36) + Math.random().toString(36).substr(2);
-            console.log("Date ", idGen);
             newSchedule.push({ times: value, days: [key], id: idGen });
           }
         }
@@ -73,6 +96,11 @@ export default function FeederSettings() {
     });
   };
 
+  /*
+  Function: changeDays
+    This function handles changing the schedule when a user removes or adds a day to the 
+    schedule. 
+  */
   const changeDays = (e: any, id: any, dayOfWeek: string) => {
     setSchedule(
       schedule.map((day: any) => {
@@ -90,7 +118,7 @@ export default function FeederSettings() {
 
           return {
             ...day,
-            days: updatedDays, // Update the days array
+            days: updatedDays,
           };
         }
         return day;
@@ -98,6 +126,11 @@ export default function FeederSettings() {
     );
   };
 
+  /*
+  Function: addTime
+    This function handles changing the schedule when a user adds a time to the 
+    schedule. 
+  */
   const addTime = (id: any) => {
     setSchedule(
       schedule.map((day: any) => {
@@ -114,6 +147,11 @@ export default function FeederSettings() {
     );
   };
 
+  /*
+  Function: changeTime
+    This function handles changing the schedule when a user changes a time on the 
+    schedule. 
+  */
   const changeTime = (e: any, id: any, index: any) => {
     const newTime = e.target.value;
 
@@ -133,15 +171,17 @@ export default function FeederSettings() {
     );
   };
 
+  // This function adds a new shcedule to the user's account
   const addSchedule = () => {
     const idGen =
       Date.now().toString(36) + Math.random().toString(36).substr(2);
     setSchedule([...schedule, { times: [], days: [], id: idGen }]);
   };
 
+  // This function handles parsing the schedule object that the react front end creates and adjusting it to match the database format
   const deconstructScheduleForServer = () => {
     let serverFormatSched: { [key: string]: string[] } = {};
-
+    // For each schedule in the list, adjust the formatting to match the destination database format
     schedule.forEach((sched: any) => {
       sched.days.forEach((day: any) => {
         if (Object.hasOwn(serverFormatSched, day)) {
@@ -154,23 +194,28 @@ export default function FeederSettings() {
     return serverFormatSched;
   };
 
+  // Detele the schedule by removing it from the state variable
   const deleteSchedule = (schedule_id: any) => {
     setSchedule(schedule.filter((sched: any) => sched.id !== schedule_id));
   };
 
+  // Write the schedules in the list to the server and to the database
   const postScheduleChanges = async () => {
+    // Create a new object in the correct format to be written
     const toWrite = deconstructScheduleForServer();
-    console.log("written ", toWrite);
+    // Send the new schedule to the backend server
     const fetchedSchedule = await client.setPortionAndSchedule(
       currentUser._id,
       toWrite,
       portion
     );
-    console.log(fetchedSchedule);
+    // Navigate to the home screen
     navigate("/home");
   };
 
+  // Delete a time from the shcedule 
   const deleteTime = (dayId: any, index: any) => {
+    // Set the schedule so the time on the specified day is no longer included in the state variable
     setSchedule(
       schedule.map((day: any) => {
         if (day.id === dayId) {
@@ -186,8 +231,6 @@ export default function FeederSettings() {
       })
     );
   };
-
-  console.log("schedule is: ", schedule);
 
   return (
     <div className="container-fluid text-center" style={{  height: "100dvh"}}>

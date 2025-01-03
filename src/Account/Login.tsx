@@ -1,29 +1,33 @@
-import { Link, Navigate, useNavigate } from "react-router-dom";
+/*
+This file defines the login screen and the login logic. All requests to the backend server
+are handled in the client file. 
+*/
+
+import { Link, useNavigate } from "react-router-dom";
 import * as client from "./client";
-import GoogleButton from "react-google-button";
 import { FaGoogle } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setCurrentUser } from "./reducer";
-import { RotatingLines } from "react-loader-spinner";
-import footer from "../footer";
 import Footer from "../footer";
-const serverUrl = process.env.REACT_APP_SERVER_URL;
 
 export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  // Create state variables for the username, password, and loginFailed flag which shows login error messages
   const [username, setUsername] = useState<String>();
   const [password, setPassword] = useState<String>();
   const [loginFailed, setLoginFailed] = useState<Boolean>(false);
-  const { currentUser } = useSelector((state: any) => state.accountReducer);
 
+  // This handles the google oauth 2 requests to the backend server
   const handleGoogleLogin = async () => {
     await client.handleLogin();
   };
 
+  // Checks if the user is currently logged in. If the user is logged in, navigates automatically to the home screen
   const checkLoggedIn = async () => {
+    // Check is the login state is NULL or false. Otherwise navigate to the home screen
     const loginState = await client.checkLoginState();
     if (loginState !== false && loginState !== null) {
       console.log("trying to reroute");
@@ -31,34 +35,46 @@ export default function Login() {
     }
   };
 
+  // Check the login state upon loading the route
   useEffect(() => {
     checkLoggedIn();
   }, []);
 
+  /*
+  Function: attemptLogin
+    This function handles an attempt to login using the local method (not google)
+  */
   const attemptLogin = async () => {
+    // Create a custom object for the user that is being attempted with the typed username and password
     const user = { username: username, password: password };
     try {
+      // Try and authenticate this user with the backend server
       const response = (await client.attemptLocalLogin(user)) as any;
+
+      // If the login is successful
       if (response.status === 200) {
-        console.log("Login successful");
-        console.log("response is: ", response);
+        // Extract the user information and the session token from the response
         const {
           data: { user, sessionToken },
         } = response;
-        console.log(
-          "Token received in front end in attempt login is: ",
-          sessionToken
-        );
+
+        // Save the token in local storage and save the user to the applciation state. Navigate to homescreen
         localStorage.setItem("token", sessionToken);
         dispatch(setCurrentUser(user));
         navigate("/");
-      } else if (response.response.status === 400) {
+      }
+      // If the user cannot be found in the database, report the username does not exist
+      else if (response.response.status === 400) {
         console.error("User doesn't exist");
         setLoginFailed(true);
-      } else if (response.response.status === 401) {
+      }
+      // If the password is incorrect for the given username, report invalid password
+      else if (response.response.status === 401) {
         console.error("Invalid password");
         setLoginFailed(true);
-      } else {
+      }
+      // If there is a third unexpected response from the server, report it
+      else {
         console.error("Unexpected response:", response);
         setLoginFailed(true);
       }
@@ -67,6 +83,7 @@ export default function Login() {
     }
   };
 
+  // Re render if the loginFailed state changes to force the error message to render
   useEffect(() => {}, [loginFailed]);
 
   return (
@@ -77,7 +94,7 @@ export default function Login() {
             <div
               className=" rounded p-2 text-center"
               style={{ width: "100%", maxWidth: "600px", overflow: "auto" }}
-              >
+            >
               <img src="/PetFeederLogo.png" height="150" />
               <h4 className="mt-3">Please Sign In</h4>
               <form className="d-flex flex-column justify-content-center mx-3 my-4">
@@ -117,6 +134,9 @@ export default function Login() {
                 </span>
                 <hr className="flex-grow-1" />
               </div>
+
+              
+              {/* This is where the google login button is placed */}
               <button
                 type="button"
                 className="btn btn-dark p-3 rounded rounded-4 mb-4"

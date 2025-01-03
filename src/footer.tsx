@@ -1,3 +1,8 @@
+/*
+This file sets up the footer for the website. The core styling was adopted from a bootstrap template
+credited here: https://getbootstrap.com/docs/4.0/examples/cover/
+*/
+
 export default function Footer() {
   return (
     <div>

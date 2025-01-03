@@ -1,3 +1,7 @@
+/*
+Sets up the basic structure of the react app
+*/
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';

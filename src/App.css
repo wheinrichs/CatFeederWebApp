@@ -1,3 +1,9 @@
+/* 
+Defines the overarching css styles for the react application
+Styling created in conjunction with the following bootstrap template
+credited here: https://getbootstrap.com/docs/4.0/examples/cover/
+*/
+
 .App {
   text-align: center;
 }

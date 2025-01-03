@@ -1,13 +1,22 @@
+/*
+This file defines all of the client requests that will be made to the server for the account services
+*/
+
 import axios from "axios";
 
+// Require axios to be made with credentials and get the server URL
 axios.defaults.withCredentials = true;
 const serverUrl = process.env.REACT_APP_SERVER_URL;
-console.log("Server URL:", serverUrl);
 
+/*
+Function: checkLoginState
+  This function checks if the user is logged in or not by providing the token in local storage
+*/
 export const checkLoginState = async () => {
-  console.log("IN CHECK LOGIN STATE FOR NOW")
   try {
+    // Get the token from local storage
     const token = localStorage.getItem('token');
+    // Send a request to the backend server to see if there is a user logged in 
     const {
       data: { loggedIn: logged_in, user },
     } = await axios.get(`${serverUrl}/auth/logged_in`, {
@@ -16,54 +25,42 @@ export const checkLoginState = async () => {
       },
     });
     if (logged_in === false) {
-      console.log("checkLogin return null");
       return null;
     } else {
-      console.log("checkLogin return user: ", user);
-
+      // Return the user from the logged_in endpoint
       return user;
     }
   } catch (err) {
     console.log("checkLogin return error");
-
     console.error(err);
     return err;
   }
 };
 
-export const getPosts = async (user: any) => {
-  if (user !== null) {
-    try {
-      // Get posts from server
-      const {
-        data: { posts },
-      } = await axios.get(`${serverUrl}/user/posts`);
-      return posts;
-    } catch (err) {
-      console.error(err);
-      return err;
-    }
-  }
-};
-
+/*
+Function: handleLogout
+  This function sends a request to the backend server to log out the current user 
+*/
 export const handleLogout = async () => {
   try {
     await axios.post(`${serverUrl}/auth/logout`);
-    console.log("logging out");
     return true;
   } catch (err) {
     console.error(err);
   }
 };
 
+/*
+Function: handleLogin
+  This function handles the google oauth 2 login requests to the backend server. The server
+  returns a URL for the google consent screen and this function navigates to that screen
+*/
 export const handleLogin = async () => {
-  console.log(serverUrl);
   try {
     // Gets authentication url from backend server
     const {
       data: { url },
     } = await axios.get(`${serverUrl}/auth/url`);
-    console.log(url);
     // Navigate to consent screen
     window.location.assign(url);
   } catch (err) {
@@ -71,11 +68,14 @@ export const handleLogin = async () => {
   }
 };
 
+/*
+Function: getAllUsernames
+  This function retrieves all the usernames from the backend server and the database
+*/
 export const getAllUsernames = async () => {
   try {
     // Get Usernames from server
     const response = await axios.get(`${serverUrl}/api/getAllUsernames`);
-    console.log(response)
     return response;
   } catch (err) {
     console.error(err);
@@ -83,8 +83,13 @@ export const getAllUsernames = async () => {
   }
 };
 
+/*
+Function: createNewUser
+  This function sends a request to the backend server to create a new user during registration
+*/
 export const createNewUser = async (newUser: any) => {
   try {
+    // Send the new user to the customUsers endpoint for the backend server
     const response = await axios.post(`${serverUrl}/api/customUsers`, newUser);
     return response;
   } catch (err) {
@@ -93,8 +98,13 @@ export const createNewUser = async (newUser: any) => {
   }
 };
 
+/*
+Function: attemptLocalLogin
+  This function executes when a login attempt is made using the local login (not google)
+*/
 export const attemptLocalLogin = async (user: any) => {
   try {
+    // See if the login is successful with the passed in username and password to the backend server
     const response = await axios.post(`${serverUrl}/api/login`, user);
     return response;
   } catch (err) {

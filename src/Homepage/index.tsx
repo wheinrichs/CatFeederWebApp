@@ -1,34 +1,29 @@
+/*
+This file defines the homepage that the user sees when initially signing in. It also 
+contains some logic for setting the overall application state. 
+*/
+
 import masthead from "../masthead";
 import "./cover.css";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import * as client from "../Account/client";
 import { setCurrentUser } from "../Account/reducer";
-import footer from "../footer";
 import Footer from "../footer";
 
 export default function Homepage() {
-  const { currentUser } = useSelector((state: any) => state.accountReducer);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [posts, setPosts] = useState([] as any)
+  const dispatch = useDispatch();  
 
-  console.log("User is: ", currentUser)
-  
-
+  // Evaluate who the current user is by sending the token to the backend server
   const evalCurrentUser = async () => {
     const FetchUser = await client.checkLoginState();
+    // Set the current user to the application state
     dispatch(setCurrentUser(FetchUser))
   }
 
-  const getPosts = async() => {
-      setPosts(await client.getPosts(currentUser));
-  }
-
+  // Check the current user when the application initially loads
   useEffect(() => {
     evalCurrentUser(); 
-    getPosts();
   }, [])
 
   return (

@@ -1,3 +1,8 @@
+/*
+This file defines the reducer that holds the account state variables for the application. It 
+holds the current user and if the user is logged in or not
+*/
+
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     currentUser: null,
@@ -8,7 +13,6 @@ const accountSlice = createSlice({
     initialState,
     reducers: {
         setCurrentUser: (state, action) => {
-            console.log("made it here with: ", action.payload)
             state.currentUser = action.payload;
         },
         setLoggedIn: (state, action) => {

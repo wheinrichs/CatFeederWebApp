@@ -1,3 +1,7 @@
+/*
+This css file defines the height and width of the video component
+*/
+
 .responsive-video {
     width: 80%;
     height: auto;
