@@ -10,11 +10,16 @@ import "./index.css";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { CiViewList } from "react-icons/ci";
 import { RiGalleryView2 } from "react-icons/ri";
+import { useSelector } from "react-redux";
 
 // Get the serverURL from the environment variable
 const serverUrl = process.env.REACT_APP_SERVER_URL;
+const portfolioViewerID = process.env.PORTFOLIO_VIEWER_SUB_ID
 
 export default function CameraFeed() {
+  // Get current user and evaluate it to see if it's portfolio viewer
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+
   // Get the live stream video URL from the proxy server that connects to the users raspberryPi
   const videoUrl = "https://stream.jarvisfeeders1234.win/";
 
@@ -138,20 +143,39 @@ export default function CameraFeed() {
     }
   };
 
+  /*
+  Function: fetchFilesLocal
+    This function retrieves the local video files from the public folder for when 
+    the portfolio viewer account is selected. This account allows people looking at my
+    portfolio to view the website with its full video functionality
+  */
+  const fetchFilesLocal = async () => {
+    
+  }
+
   // Set the selected video and turn off the live view
   const selectVideo = (video: any) => {
     setVideoSelected(video);
     setLiveView(false);
   };
 
-  // When the access token updates get the folder ID in the google drive
+  // When the access token updates get the folder ID in the google drive, if the portfolio viewer account is logged in
   useEffect(() => {
-    getRecordingFolderID();
+    if(portfolioViewerID !== currentUser._id) {
+      getRecordingFolderID();
+    }
   }, [accessToken]);
 
   // When the folder ID updates fetch the local files
   useEffect(() => {
-    fetchFiles();
+    // If the user is the portfolio viewer account, retrieve the local videos
+    if(portfolioViewerID === currentUser._id) {
+      fetchFilesLocal();
+    }
+    // If it is not the portfolio viewer account, fetch the files from the google account
+    else {
+      fetchFiles();
+    }
   }, [folderID]);
 
   // When the videos update process the videos to extract the date and time information
@@ -162,6 +186,7 @@ export default function CameraFeed() {
   // Rerender the screen when the date selected changes or if the list view option changes to gallery (or vice versa)
   useEffect(() => {}, [dateSelected, listView]);
 
+  console.log(currentUser._id)
   return (
     <div className="text-center" style={{ height: "100dvh" }}>
       <div className="cover-container d-flex h-100 p-3 mx-auto flex-column">
