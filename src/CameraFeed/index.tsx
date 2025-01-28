@@ -11,10 +11,11 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import { CiViewList } from "react-icons/ci";
 import { RiGalleryView2 } from "react-icons/ri";
 import { useSelector } from "react-redux";
+import { group } from "console";
 
 // Get the serverURL from the environment variable
 const serverUrl = process.env.REACT_APP_SERVER_URL;
-const portfolioViewerID = process.env.PORTFOLIO_VIEWER_SUB_ID
+const portfolioViewerID = process.env.REACT_APP_PORTFOLIO_VIEWER_SUB_ID;
 
 export default function CameraFeed() {
   // Get current user and evaluate it to see if it's portfolio viewer
@@ -137,7 +138,7 @@ export default function CameraFeed() {
         // Check all the pages of results
         pageToken = data.nextPageToken || null;
       } while (pageToken);
-
+      console.log(allFiles);
       // Set all files after fetching all pages
       setVideos(allFiles);
     }
@@ -150,8 +151,11 @@ export default function CameraFeed() {
     portfolio to view the website with its full video functionality
   */
   const fetchFilesLocal = async () => {
-    
-  }
+    fetch("/SampleRecordings/PortfolioViewerVideoFiles.json")
+      .then((res) => res.json())
+      .then((data) => setVideos(data))
+      .catch((err) => console.error(err));
+  };
 
   // Set the selected video and turn off the live view
   const selectVideo = (video: any) => {
@@ -161,7 +165,7 @@ export default function CameraFeed() {
 
   // When the access token updates get the folder ID in the google drive, if the portfolio viewer account is logged in
   useEffect(() => {
-    if(portfolioViewerID !== currentUser._id) {
+    if (portfolioViewerID !== currentUser._id) {
       getRecordingFolderID();
     }
   }, [accessToken]);
@@ -169,7 +173,8 @@ export default function CameraFeed() {
   // When the folder ID updates fetch the local files
   useEffect(() => {
     // If the user is the portfolio viewer account, retrieve the local videos
-    if(portfolioViewerID === currentUser._id) {
+    if (portfolioViewerID === currentUser._id) {
+      console.log("Fetching locally");
       fetchFilesLocal();
     }
     // If it is not the portfolio viewer account, fetch the files from the google account
@@ -186,7 +191,7 @@ export default function CameraFeed() {
   // Rerender the screen when the date selected changes or if the list view option changes to gallery (or vice versa)
   useEffect(() => {}, [dateSelected, listView]);
 
-  console.log(currentUser._id)
+  console.log(groupedVideos);
   return (
     <div className="text-center" style={{ height: "100dvh" }}>
       <div className="cover-container d-flex h-100 p-3 mx-auto flex-column">
@@ -203,11 +208,19 @@ export default function CameraFeed() {
                   View Recordings
                 </button>
                 <div className="video-container my-3">
+                  {portfolioViewerID === currentUser._id ? 
+                  <img
+                  src={"/SampleRecordings/LiveFeedStatic.gif"}
+                  alt="Video Feed"
+                  className="responsive-img"
+                />
+                    :
                   <img
                     src={`${videoUrl}?token=${sessionToken}`} // Append the token to the URL as a query parameter
                     alt="Video Feed"
                     className="responsive-img"
                   />
+}
                 </div>
               </div>
             ) : (
@@ -315,14 +328,25 @@ export default function CameraFeed() {
                           {videoSelected && (
                             <div className="h-100">
                               <h3>{`${videoSelected.date} at ${videoSelected.time}`}</h3>
-                              <video
-                                className="responsive-img"
-                                controls
-                                width="500"
-                                src={`${serverUrl}/api/video/${videoSelected.id}?accessToken=${accessToken}`}
-                              >
-                                Your browser does not support the video tag.
-                              </video>
+                              {portfolioViewerID === currentUser._id ? (
+                                <video
+                                  className="responsive-img"
+                                  controls
+                                  width="500"
+                                  src={`/SampleRecordings/${videoSelected.name}`}
+                                >
+                                  Your browser does not support the video tag.
+                                </video>
+                              ) : (
+                                <video
+                                  className="responsive-img"
+                                  controls
+                                  width="500"
+                                  src={`${serverUrl}/api/video/${videoSelected.id}?accessToken=${accessToken}`}
+                                >
+                                  Your browser does not support the video tag.
+                                </video>
+                              )}
                             </div>
                           )}
                         </div>
@@ -372,14 +396,25 @@ export default function CameraFeed() {
                                 groupedVideos[dateSelected].map((video) => (
                                   <div className="col m-2">
                                     <h5>{`${video.time}`}</h5>
-                                    <video
-                                      controls
-                                      width="200"
-                                      src={`${serverUrl}/api/video/${video.id}?accessToken=${accessToken}`}
-                                    >
-                                      Your browser does not support the video
-                                      tag.
-                                    </video>
+                                    {portfolioViewerID === currentUser._id ? (
+                                      <video
+                                        controls
+                                        width="200"
+                                        src={`/SampleRecordings/${video.name}`}
+                                      >
+                                        Your browser does not support the video
+                                        tag.
+                                      </video>
+                                    ) : (
+                                      <video
+                                        controls
+                                        width="200"
+                                        src={`${serverUrl}/api/video/${video.id}?accessToken=${accessToken}`}
+                                      >
+                                        Your browser does not support the video
+                                        tag.
+                                      </video>
+                                    )}
                                   </div>
                                 ))}
                             </div>

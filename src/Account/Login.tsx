@@ -11,6 +11,9 @@ import { useDispatch } from "react-redux";
 import { setCurrentUser } from "./reducer";
 import Footer from "../footer";
 
+const portfolioUsername = process.env.REACT_APP_PORTFOLIO_USERNAME;
+const portfolioPassword = process.env.REACT_APP_PORTFOLIO_PASSWORD;
+
 export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -83,6 +86,33 @@ export default function Login() {
     }
   };
 
+  /*
+  Function: PortfolioViewLogin
+    This function handles a login attempt when the portfolio viewer account is selected
+  */
+  const PortfolioViewLogin = async () => {
+    // Create a custom object for the portfolio user
+    const user = { username: portfolioUsername, password: portfolioPassword };
+    try {
+      // Try and authenticate the portfolio user
+      const response = (await client.attemptLocalLogin(user)) as any;
+
+      // If the login is successful
+      if (response.status === 200) {
+        // Extract the user information and the session token from the response
+        const {
+          data: { user, sessionToken },
+        } = response;
+
+        // Save the token in local storage and save the user to the applciation state. Navigate to homescreen
+        localStorage.setItem("token", sessionToken);
+        dispatch(setCurrentUser(user));
+        navigate("/");
+      }
+  } catch (error) {
+    console.error("An error occurred during login:", error);
+  } }
+
   // Re render if the loginFailed state changes to force the error message to render
   useEffect(() => {}, [loginFailed]);
 
@@ -134,8 +164,6 @@ export default function Login() {
                 </span>
                 <hr className="flex-grow-1" />
               </div>
-
-              
               {/* This is where the google login button is placed */}
               <button
                 type="button"
@@ -148,7 +176,15 @@ export default function Login() {
               <br />
               Don't have an account? <Link to="/SignUp">Sign up</Link> <br />
               Viewing this as part of my portfolio?{" "}
-              <Link to="/">Click here</Link>
+              <Link
+                to="/"
+                onClick={(e) => {
+                  e.preventDefault();
+                  PortfolioViewLogin();
+                }}
+              >
+                Click here
+              </Link>
             </div>
           </div>
           <div className="mt-auto">
