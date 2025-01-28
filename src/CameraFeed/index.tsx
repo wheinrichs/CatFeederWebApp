@@ -223,7 +223,7 @@ export default function CameraFeed() {
 }
                 </div>
               </div>
-            ) : (
+            ) : ( 
               <div className="h-100 d-flex flex-column">
                 <div className="d-flex justify-content-between align-items-center mb-2">
                   <button
