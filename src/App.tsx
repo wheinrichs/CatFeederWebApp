@@ -15,8 +15,7 @@ import Session from "./Session";
 import FeederSettings from "./FeederSettings";
 import SignUp from "./Account/SignUp";
 import Homepage from "./Homepage";
-import TestVideo from "./testindex";
-
+import PortfolioLogin from "./Account/PortfolioLogin";
 
 function App() {
   return (
@@ -31,7 +30,7 @@ function App() {
             {/* login and signup are not protected routes and the default page is home */}
             <Route path="/" element={<Navigate to="home" />} />
             <Route path="/Login" element={<Login />} />
-            <Route path="/Test" element={<TestVideo />} />
+            <Route path="/PortfolioLogin" element={<PortfolioLogin />} />
             <Route path="/SignUp" element={<SignUp />} />
             {/* All other routes are protected meaning they require login */}
             <Route

@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setCurrentUser } from "./reducer";
 import Footer from "../footer";
+import { RotatingLines } from "react-loader-spinner";
 
 const portfolioUsername = process.env.REACT_APP_PORTFOLIO_USERNAME;
 const portfolioPassword = process.env.REACT_APP_PORTFOLIO_PASSWORD;
@@ -22,6 +23,9 @@ export default function Login() {
   const [username, setUsername] = useState<String>();
   const [password, setPassword] = useState<String>();
   const [loginFailed, setLoginFailed] = useState<Boolean>(false);
+
+  // Create a state variable that shows the logging in message while waiting for server response
+  const [loggingIn, setLoggingIn] = useState<Boolean>(false);
 
   // This handles the google oauth 2 requests to the backend server
   const handleGoogleLogin = async () => {
@@ -48,6 +52,7 @@ export default function Login() {
     This function handles an attempt to login using the local method (not google)
   */
   const attemptLogin = async () => {
+    setLoggingIn(true)
     // Create a custom object for the user that is being attempted with the typed username and password
     const user = { username: username, password: password };
     try {
@@ -91,6 +96,7 @@ export default function Login() {
     This function handles a login attempt when the portfolio viewer account is selected
   */
   const PortfolioViewLogin = async () => {
+    setLoggingIn(true)
     // Create a custom object for the portfolio user
     const user = { username: portfolioUsername, password: portfolioPassword };
     try {
@@ -109,9 +115,10 @@ export default function Login() {
         dispatch(setCurrentUser(user));
         navigate("/");
       }
-  } catch (error) {
-    console.error("An error occurred during login:", error);
-  } }
+    } catch (error) {
+      console.error("An error occurred during login:", error);
+    }
+  };
 
   // Re render if the loginFailed state changes to force the error message to render
   useEffect(() => {}, [loginFailed]);
@@ -149,13 +156,23 @@ export default function Login() {
                   Wrong Username or Password
                 </div>
               )}
-              <button
-                className="btn btn-primary mt-1 mb-1"
-                onClick={attemptLogin}
-              >
-                {" "}
-                Submit
-              </button>{" "}
+              {loggingIn ? (
+                <RotatingLines
+                  strokeColor="grey"
+                  strokeWidth="5"
+                  animationDuration="0.75"
+                  width="50"
+                  visible={true}
+                />
+              ) : (
+                <button
+                  className="btn btn-primary mt-1 mb-1"
+                  onClick={attemptLogin}
+                >
+                  {" "}
+                  Submit
+                </button>
+              )}{" "}
               <br />
               <div className="d-flex align-items-center my-2 mx-3">
                 <hr className="flex-grow-1" />

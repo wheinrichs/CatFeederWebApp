@@ -41,7 +41,7 @@ export default function Session({ children }: { children: any }) {
     setPending(false);
   };
 
-    /*
+  /*
   Function: useEffect
     On startup show the loading screen and cycle through the messages
   */
