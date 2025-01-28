@@ -11,7 +11,6 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import { CiViewList } from "react-icons/ci";
 import { RiGalleryView2 } from "react-icons/ri";
 import { useSelector } from "react-redux";
-import { group } from "console";
 
 // Get the serverURL from the environment variable
 const serverUrl = process.env.REACT_APP_SERVER_URL;
@@ -20,6 +19,10 @@ const portfolioViewerID = process.env.REACT_APP_PORTFOLIO_VIEWER_SUB_ID;
 export default function CameraFeed() {
   // Get current user and evaluate it to see if it's portfolio viewer
   const { currentUser } = useSelector((state: any) => state.accountReducer);
+
+  // Evaluate if the current user is a google user to check recordings and check if the user can see the live feed
+  const googleUser = currentUser.loginMethod === "google";
+  const liveFeedShow = currentUser.liveFeedAccess;
 
   // Get the live stream video URL from the proxy server that connects to the users raspberryPi
   const videoUrl = "https://stream.jarvisfeeders1234.win/";
@@ -138,7 +141,6 @@ export default function CameraFeed() {
         // Check all the pages of results
         pageToken = data.nextPageToken || null;
       } while (pageToken);
-      console.log(allFiles);
       // Set all files after fetching all pages
       setVideos(allFiles);
     }
@@ -165,7 +167,7 @@ export default function CameraFeed() {
 
   // When the access token updates get the folder ID in the google drive, if the portfolio viewer account is logged in
   useEffect(() => {
-    if (portfolioViewerID !== currentUser._id) {
+    if (portfolioViewerID !== currentUser._id && googleUser) {
       getRecordingFolderID();
     }
   }, [accessToken]);
@@ -174,11 +176,10 @@ export default function CameraFeed() {
   useEffect(() => {
     // If the user is the portfolio viewer account, retrieve the local videos
     if (portfolioViewerID === currentUser._id) {
-      console.log("Fetching locally");
       fetchFilesLocal();
     }
     // If it is not the portfolio viewer account, fetch the files from the google account
-    else {
+    else if(googleUser) {
       fetchFiles();
     }
   }, [folderID]);
@@ -191,7 +192,6 @@ export default function CameraFeed() {
   // Rerender the screen when the date selected changes or if the list view option changes to gallery (or vice versa)
   useEffect(() => {}, [dateSelected, listView]);
 
-  console.log(groupedVideos);
   return (
     <div className="text-center" style={{ height: "100dvh" }}>
       <div className="cover-container d-flex h-100 p-3 mx-auto flex-column">
@@ -208,22 +208,25 @@ export default function CameraFeed() {
                   View Recordings
                 </button>
                 <div className="video-container my-3">
-                  {portfolioViewerID === currentUser._id ? 
-                  <img
-                  src={"/SampleRecordings/LiveFeedStatic.gif"}
-                  alt="Video Feed"
-                  className="responsive-img"
-                />
-                    :
-                  <img
-                    src={`${videoUrl}?token=${sessionToken}`} // Append the token to the URL as a query parameter
-                    alt="Video Feed"
-                    className="responsive-img"
-                  />
-}
+                  {portfolioViewerID === currentUser._id ? (
+                    <img
+                      src={"/SampleRecordings/LiveFeedStatic.gif"}
+                      alt="Video Feed"
+                      className="responsive-img"
+                    />
+                  ) : (
+                    liveFeedShow ? (
+                    <img
+                      // Append the token to the URL as a query parameter
+                      src={`${videoUrl}?token=${sessionToken}`}
+                      alt="Video Feed"
+                      className="responsive-img"
+                    /> ) :
+                    <h5 className="alert alert-danger">Live stream restricted to approved users</h5>
+                  )}
                 </div>
               </div>
-            ) : ( 
+            ) : (
               <div className="h-100 d-flex flex-column">
                 <div className="d-flex justify-content-between align-items-center mb-2">
                   <button
